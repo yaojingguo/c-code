@@ -1,0 +1,62 @@
+`objdump -r main.o`:
+
+RELOCATION RECORDS FOR [.text]:
+OFFSET   TYPE              VALUE 
+0000000a R_386_32          no
+00000012 R_386_PC32        foo
+
+main.S:
+00000000 <main>:
+   0:	55                   	push   %ebp
+   1:	89 e5                	mov    %esp,%ebp
+   3:	83 e4 f0             	and    $0xfffffff0,%esp
+   6:	83 ec 10             	sub    $0x10,%esp
+   9:	a1 00 00 00 00       	mov    0x0,%eax
+         ~~~~no~~~~~
+   e:	89 04 24             	mov    %eax,(%esp)
+  11:	e8 fc ff ff ff       	call   12 <main+0x12>
+         ~~~~foo~~~~
+  16:	b8 00 00 00 00       	mov    $0x0,%eax
+  1b:	c9                   	leave  
+  1c:	c3                   	ret    
+
+We can see no is at offset 0x0a and foo is at offset 0x12 in main.S.
+
+prog.S:
+080483b4 <main>:
+ 80483b4:	55                   	push   %ebp
+ 80483b5:	89 e5                	mov    %esp,%ebp
+ 80483b7:	83 e4 f0             	and    $0xfffffff0,%esp
+ 80483ba:	83 ec 10             	sub    $0x10,%esp
+ 80483bd:	a1 10 a0 04 08       	mov    0x804a010,%eax
+             ~~~~no~~~~~
+ 80483c2:	89 04 24             	mov    %eax,(%esp)
+ 80483c5:	e8 0a 00 00 00       	call   80483d4 <foo>
+             ~~~~foo~~~~
+ 80483ca:	b8 00 00 00 00       	mov    $0x0,%eax
+ 80483cf:	c9                   	leave  
+ 80483d0:	c3                   	ret    
+ 80483d1:	90                   	nop
+ 80483d2:	90                   	nop
+ 80483d3:	90                   	nop
+
+080483d4 <foo>:
+ 80483d4:	55                   	push   %ebp
+ 80483d5:	89 e5                	mov    %esp,%ebp
+ 80483d7:	5d                   	pop    %ebp
+ 80483d8:	c3                   	ret    
+ 80483d9:	90                   	nop
+ 80483da:	90                   	nop
+ 80483db:	90                   	nop
+ 80483dc:	90                   	nop
+ 80483dd:	90                   	nop
+ 80483de:	90                   	nop
+ 80483df:	90                   	nop
+
+From ELF spec, we know that S+A for R_386_32. 
+S + A = 0x0804a010 + x00000000 = 0x0804a010
+
+For R_386_32, S + A - P
+S + A - P = 0x080483d4 + 0xfffffffc - 0x080483c6 
+          = 0x080483d4 - 0x4 - 0x080483c6 
+          = 0x0000000a
