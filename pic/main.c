@@ -1,13 +1,14 @@
 #include <stdio.h>
 
-extern int increment(int no);
+extern int my_func(int no);
+extern void var();
 
 int main(int argc, const char *argv[]) {
 	int i;
 	
-	i = 100;
-	i = increment(i);
-	printf("i: %d\n", i);
+	i = 0;
+	my_func(i);
+	bar();
 		
 	return 0;
 }
