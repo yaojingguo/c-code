@@ -61,5 +61,4 @@ S + A - P = 0x080483d4 + 0xfffffffc - 0x080483c6
           = 0x080483d4 - 0x4 - 0x080483c6 
           = 0x0000000a
 
-Refer to ``Relocation Types`` in ELF_ spec. 
-.. _ELF: http://refspecs.freestandards.org/elf/elf.pdf
+Refer to ``Relocation Types`` in ELF spec (http://refspecs.freestandards.org/elf/elf.pdf).
