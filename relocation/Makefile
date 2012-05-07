@@ -7,4 +7,4 @@ all:
 	objdump -S prog > prog.S
 
 clean:
-	rm *.S *.o
+	rm *.S *.o prog
