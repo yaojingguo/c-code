@@ -40,9 +40,9 @@ create_and_bind(const char *port)
 	int s, sfd;
 
 	memset(&hints, 0, sizeof(struct addrinfo));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE;
+	hints.ai_family = AF_UNSPEC;			// Return IPv4 and IPv6 choices
+	hints.ai_socktype = SOCK_STREAM;	// We want a TCP socket
+	hints.ai_flags = AI_PASSIVE;      // All interfaces
 
 	s = getaddrinfo(NULL, port, &hints, &result);
 	if (s != 0) {
@@ -107,6 +107,8 @@ main(int argc, const char *argv[])
 		perror("epoll_ctl");
 		abort();
 	}
+
+	// Buffer where events are returned
 	events = calloc(MAXEVENTS, sizeof event);
 
 	// The event loop
@@ -117,10 +119,14 @@ main(int argc, const char *argv[])
 			if ((events[i].events & EPOLLERR) ||
 					(events[i].events & EPOLLHUP) ||
 					(!(events[i].events & EPOLLIN))) {
+				// An error has occurred on this fd, or the socket is not
+				// ready for reading (why were we notified then?)
 				fprintf(stderr, "epoll error\n");
 				close(events[i].data.fd);
 				continue;
 			} else if (sfd == events[i].data.fd) {
+				// We have a notification on the listening socket, which
+				// means one or more incoming connections.
 				while (1) {
 					struct sockaddr in_addr;
 					socklen_t in_len;
@@ -132,6 +138,8 @@ main(int argc, const char *argv[])
 					if (infd == -1) {
 						if ((errno == EAGAIN) ||
 								(errno == EWOULDBLOCK)) {
+							// We have processed all incoming
+							// connections.
 							break;
 						} else {
 							perror("accept");
@@ -146,6 +154,8 @@ main(int argc, const char *argv[])
 						printf("Accepted connection on descriptor %d "
 								"(host=%s, port=%s)\n", infd, hbuf, sbuf);
 					}
+					// Make the incoming socket non-blocking and add it to the
+					// list of fds to monitor.
 					s = make_socket_non_blocking(infd);
 					if (s == -1)
 						abort();
@@ -159,6 +169,11 @@ main(int argc, const char *argv[])
 				}
 				continue;
 			} else {
+				// We have data on the fd waiting to be read. Read and
+				// display it. We must read whatever data is available
+				// completely, as we are running in edge-triggered mode
+				// and won't get a notification again for the same
+				// data.
 				int done = 0;
 
 				while (1) {
@@ -167,16 +182,19 @@ main(int argc, const char *argv[])
 
 					count = read(events[i].data.fd, buf, sizeof buf);
 					if (count == -1) {
+						// If errno == EAGAIN, that means we have read all
+						// data. So go back to the main loop.
 						if (errno != EAGAIN) {
 							perror("read");
 							done = 1;
 						}
 						break;
 					} else if (count == 0) {
+						// End of file. The remote has closed the connection.
 						done = 1;
 						break;
 					} 
-
+					// Write the buffer to standard output
 					s = write(1, buf, count);
 					if (s == -1) {
 						perror("write");
@@ -187,6 +205,8 @@ main(int argc, const char *argv[])
 				if (done) {
 					printf("Closed connection on descriptor %d\n",
 							events[i].data.fd);
+					// Closing the descriptor will make epoll remove it
+					// from the set of descriptors which are monitored.
 					close(events[i].data.fd);
 				}
 			}
