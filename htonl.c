@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 
-int main(int argc, const char *argv[]) {
+int main(int argc, const char *argv[]) 
+{
 	int h, l;
 
 	h = 0x11223344;
