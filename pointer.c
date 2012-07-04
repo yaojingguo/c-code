@@ -1,26 +1,40 @@
 #include <stdio.h>
 
-void pointer_init()
+void test1()
 {
-	int* p;
-	int i = 10;
-	// *p = i; // segmentation fault
-	p = &i;
+  // p's value is 10;
+  // * is part of declartion.
+  int *p = 10;
 }
 
-void pointer_size() {
-	double *d_p;
-	printf("double pointer size: %d\n", sizeof(d_p));
-	printf("double size: %d\n", sizeof(*d_p));
+void test2()
+{
+  int val;
 
-	int *i_p;
-	printf("int pointer size: %d\n", sizeof(i_p));
-	printf("int size: %d\n", sizeof(*i_p));
+  int *p;
+  p = &val;
+  *p = 10;
+  printf("value: %d\n", *p);
+
+  int *q = &val;
+  printf("value: %d\n", *q);
+}
+
+void test3()
+{
+  // Segement fault:
+  // p points to some invalid memory location. Storing a value to that location 
+  // causes a segment fault.
+  int *p;
+  // * is dereference operator.
+  *p = 10;
 }
 
 int main(int argc, const char *argv[]) 
 {
-	pointer_init();
-	pointer_size();
-	return 0;
+  test1();
+  test2();
+  test3();
+  return 0;
 }
+
