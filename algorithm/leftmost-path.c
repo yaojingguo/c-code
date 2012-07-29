@@ -3,7 +3,8 @@
 
 // Given a binary tree, return its leftmost path -- the nodes along the 
 // leftmost path from the root node down to the farthest leaf node. Error 
-// handling and resource freeing are omitted.
+// handling and resource freeing are omitted. It is solve in a way similar to 
+// maxDepth problem in http://cslibrary.stanford.edu/110/BinaryTrees.html.
 
 struct lnode {
   int data;
