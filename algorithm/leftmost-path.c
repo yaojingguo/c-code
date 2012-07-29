@@ -52,6 +52,7 @@ void info_list(struct list* ls)
     printf("%d ", p->data);
     p = p->next;
   }
+  printf("\n");
 }
 
 struct list* leftmostPath(struct tnode* node)
