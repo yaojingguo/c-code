@@ -30,11 +30,30 @@ void test3()
   *p = 10;
 }
 
+
+
+void test4()
+{
+  int* p;
+  int** pp;
+  pp = &p;
+}
+
+// Segment fault
+void test5()
+{
+  int* p;
+  int** pp;
+  *pp = p;
+}
+
 int main(int argc, const char *argv[]) 
 {
   test1();
   test2();
   test3();
+  test4();
+  test5();
   return 0;
 }
 
