@@ -3,4 +3,5 @@
 *.so
 a.out
 https_client
+cscope*
 
