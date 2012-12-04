@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 
 char table[64] = {
   [0] = 'A',  [1] = 'B',  [2] = 'C',  [3] = 'D', 
@@ -19,7 +22,57 @@ char table[64] = {
   [60] = '8', [61] = '9', [62] = '+', [63] = '/'
 };
 
+char* encode(unsigned char* s, int len) 
+{
+  int i, j;
+  int reminder;
+  int integral;
+  char* dst;
+  int en_len;
+
+  reminder = len % 3;
+  integral =  len - reminder;
+
+  en_len = (len / 3) * 4;
+  if (reminder > 0)
+    en_len += 4;
+  en_len++;
+
+  dst = (char*) malloc(en_len);
+  dst[en_len-1] = '\0';
+
+  for (i = 0, j = 0; i < integral; i +=3, j+=4) {
+    dst[j]   = table[(0xFCU & s[i]) >> 2];
+    dst[j+1] = table[((0x03U & s[i]) << 4) + ((0xF0U & s[i+1]) >> 4)];
+    dst[j+2] = table[((0x0FU & s[i+1]) << 2) + ((0xC0U & s[i+2]) >> 6)];
+    dst[j+3] = table[0x3FU & s[i+2]];
+  }
+  if (reminder == 1) {
+    dst[j] = table[(0xFCU & s[i]) >> 2];
+    dst[j+1] = table[(0x03U & s[i]) << 4];
+    dst[j+2] = '=';
+    dst[j+3] = '=';
+  }
+  if (reminder == 2) {
+    dst[j] = table[(0xFCU & s[i]) >> 2];
+    dst[j+1] = table[((0x03U & s[i]) << 4) + ((0xF0U & s[i+1]) >> 4)];
+    dst[j+2] = table[(0x0FU & s[i+1]) << 2];
+    dst[j+3] = '=';
+  }
+  return dst;
+}
+
+void test(unsigned char* de, unsigned char* en)
+{
+  char* dst = encode(de, strlen(de));
+  assert(strcmp(en, dst) == 0);
+  free(dst);
+}
 int main(int argc, const char *argv[]) 
 {
+  test("YOY", "WU9Z");
+  test("YOYO", "WU9ZTw==");
+  test("YOYO!", "WU9ZTyE=");
+  test("6A7x8x9x2", "NkE3eDh4OXgy");
 }
 
