@@ -68,6 +68,7 @@ void test(unsigned char* de, unsigned char* en)
   assert(strcmp(en, dst) == 0);
   free(dst);
 }
+
 int main(int argc, const char *argv[]) 
 {
   test("YOY", "WU9Z");
