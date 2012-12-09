@@ -52,34 +52,37 @@ uint32_t K(int t)
     assert(0);
 }
 
-uint8_t* pad(uint8_t* in, int inl, uint64_t l)
+uint8_t* pad(uint8_t* in, int inl, uint64_t l, uint8_t* block)
 {
-  uint8_t* block;
+  int i;
+  uint8_t* p;
 
-  block = (uint8_t*) malloc(64);
   memset(block, 0, 64);
   memcpy(block, in, inl);
   block[inl] = 0x80;
+
+  block += 56;
   l *= 8;
-  memcpy(block + 56, &l, 8);
+  p = (uint8_t*) &l;
+  for (i = 0; i <= 7; ++i)
+    block[i] = p[7-i];
 }
 
+// l: byte length
 uint8_t* sha1(uint8_t *message, uint64_t l, uint8_t* digest)
 {
   // pad
   uint64_t nblock, i;
-  int nfrac, t;
-  uint8_t* last;
+  int nremainder, t;
+  uint8_t last[64];
   uint8_t W[80];
   uint32_t temp, A, B, C, D, E;
   uint32_t* H;
 
   nblock = l / 64;
-  nfrac = l % 64;
-  if (nfrac > 0)
-    last = pad(message + nblock * 64, nfrac, l);
-  else
-    last = NULL;
+  nremainder = l % 64;
+  if (nremainder > 0)
+    pad(message + nblock * 64, nremainder, l, last);
 
   H = (uint32_t*) digest;
   H[0] = 0x67452301;
@@ -91,7 +94,7 @@ uint8_t* sha1(uint8_t *message, uint64_t l, uint8_t* digest)
   for (i = 0; i <= nblock; ++i) {
     if (i < nblock)
       memcpy(W, message +  64 * i, 64);
-    else if (last != NULL)
+    else if (nremainder > 0)
       memcpy(W, last, 64);
     else
       break;
@@ -118,7 +121,6 @@ uint8_t* sha1(uint8_t *message, uint64_t l, uint8_t* digest)
   }
 }
 
-
 void to_text(uint8_t* digest, char* text)
 {
   int i;
@@ -131,6 +133,13 @@ void to_text(uint8_t* digest, char* text)
 int main(int argc, const char *argv[]) 
 {
   uint8_t digest[20];
-  char text[40];
+  char text[41];
+  uint8_t* message = "abc";
+  sha1(message, 3, digest);
+  text[40] = '\0';
+  to_text(digest, text);
+  printf("message: %s\n", message);
+  // printf("digest: %s\n", digest);
+  printf("text: %s\n", text);
   return 0;
 }
