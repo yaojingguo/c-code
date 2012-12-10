@@ -1,8 +1,13 @@
+/*
+ * Naive implemention of sha1 as described by Method in 
+ * http://tools.ietf.org/html/rfc3174
+ */
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #define S(bits,word) \
   (((word) << (bits)) | ((word) >> (32-(bits))))
@@ -120,32 +125,38 @@ uint8_t* sha1(uint8_t *message, uint64_t l, uint32_t* H)
 
 #define TEST1 "abc"
 #define TEST2 "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
-// #define TEST3   "a"
-// #define TEST4a  "01234567012345670123456701234567"
-// #define TEST4b  "01234567012345670123456701234567"
-// an exact multiple of 512 bits
-#define TEST4   TEST4a TEST4b
 #define M 1000000
 
-void info(uint32_t* digest) 
+void verify(char* expected, uint32_t* digest) 
 {
-  printf("  sha1: %08x %08x %08x %08x %08x\n", 
-         digest[0], 
-         digest[1], 
-         digest[2], 
-         digest[3], 
-         digest[4]);
+  char text[45];
+  snprintf(text, 45, 
+          "%08x %08x %08x %08x %08x", 
+          digest[0], 
+          digest[1], 
+          digest[2], 
+          digest[3], 
+          digest[4]);
+  printf("sha1: %s\n", text);
+  assert(strcmp(expected, text) == 0);
 }
+
 int main(int argc, const char *argv[]) 
 {
   uint32_t digest[5];
-  // sha1(TEST1, strlen(TEST1), digest);
-  // sha1(TEST2, strlen(TEST2), digest);
+
+  sha1(TEST1, strlen(TEST1), digest);
+  verify("a9993e36 4706816a ba3e2571 7850c26c 9cd0d89d", digest);
+
+  sha1(TEST2, strlen(TEST2), digest);
+  verify("84983e44 1c3bd26e baae4aa1 f95129e5 e54670f1", digest);
 
   uint8_t* ma = (uint8_t*) malloc(M);
   memset(ma, 'a', M);
   sha1(ma, M, digest);
-  info(digest);
   free(ma);
+
+  verify("34aa973c d4c4daa4 f61eeb2b dbad2731 6534016f", digest);
+
   return 0;
 }
