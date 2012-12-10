@@ -1,5 +1,5 @@
 /*
- * Naive implemention of sha1 as described by Method in 
+ * Naive implemention of sha1 as described by Method 1 in 
  * http://tools.ietf.org/html/rfc3174
  */
 #include <stdio.h>
