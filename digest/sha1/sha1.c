@@ -33,37 +33,15 @@ uint32_t K(int t)
     assert(0);
 }
 
-uint8_t* pad(uint8_t* in, int inl, uint64_t l, uint8_t* block)
-{
-  int i;
-  uint8_t* p;
-
-  memset(block, 0, 64);
-  memcpy(block, in, inl);
-  block[inl] = 0x80;
-
-  block += 56;
-  l *= 8;
-  p = (uint8_t*) &l;
-  for (i = 0; i <= 7; ++i)
-    block[i] = p[7-i];
-}
-
 // block: 64 bytes
 // digest: 20 bytes
-void process_block(uint8_t* block, uint8_t* digest)
+// void process_block(uint8_t* block, uint8_t* digest)
+void process_block(uint8_t* block, uint32_t* H)
 {
   uint32_t W[80];
   uint32_t temp, A, B, C, D, E;
-  uint32_t* H;
   int i, t;
 
-  H = (uint32_t*) digest;
-  H[0] = 0x67452301;
-  H[1] = 0xEFCDAB89;
-  H[2] = 0x98BADCFE;
-  H[3] = 0x10325476;
-  H[4] = 0xC3D2E1F0;
 
   for (t = 0; t <= 15; ++t) {
     W[t] = block[4 * t] << 24;
@@ -81,7 +59,7 @@ void process_block(uint8_t* block, uint8_t* digest)
   D = H[3]; 
   E = H[4];
 
-  printf("            A        B        C        D        E\n");
+  // printf("            A        B        C        D        E\n");
   for (t = 0; t <= 79; ++t) {
     temp = S(5, A) + f(t, B, C, D) + E + W[t] + K(t);
     E = D;
@@ -89,7 +67,7 @@ void process_block(uint8_t* block, uint8_t* digest)
     C = S(30, B);
     B = A;
     A = temp;
-    printf("t = %2d: %08x %08x %08x %08x %08x\n", t, A, B, C, D, E);
+    // printf("t = %2d: %08x %08x %08x %08x %08x\n", t, A, B, C, D, E);
   }
 
   H[0] += A;
@@ -97,11 +75,11 @@ void process_block(uint8_t* block, uint8_t* digest)
   H[2] += C;
   H[3] += D;
   H[4] += E;
-  printf("  sha1: %08x %08x %08x %08x %08x\n", H[0], H[1], H[2], H[3], H[4]);
+  // printf("     H: %08x %08x %08x %08x %08x\n", H[0], H[1], H[2], H[3], H[4]);
 }
 
 // l: byte length
-uint8_t* sha1(uint8_t *message, uint64_t l, uint8_t* digest)
+uint8_t* sha1(uint8_t *message, uint64_t l, uint32_t* H)
 {
   uint64_t nblock, iblock;
   uint8_t block[64];
@@ -110,15 +88,24 @@ uint8_t* sha1(uint8_t *message, uint64_t l, uint8_t* digest)
   nblock = l / 64;
   nremainder = l % 64; 
 
+  H[0] = 0x67452301;
+  H[1] = 0xEFCDAB89;
+  H[2] = 0x98BADCFE;
+  H[3] = 0x10325476;
+  H[4] = 0xC3D2E1F0;
+
   for (iblock = 0; iblock < nblock; ++iblock) {
     memcpy(block, message, 64);
-    process_block(block, digest);
+    process_block(block, H);
     message += 64;
   }
 
   memset(block, 0, 64);
   memcpy(block, message, nremainder);
   if (nremainder >= 56 ) { 
+    block[nremainder++] = 0x80; 
+    process_block(block, H);
+    memset(block, 0, 64);
   } else {
     block[nremainder++] = 0x80;
   }
@@ -128,21 +115,37 @@ uint8_t* sha1(uint8_t *message, uint64_t l, uint8_t* digest)
   for (j = 0; j < 8; j++) {
     block[56 + j] = (uint8_t) ((l >> (8 * (7 - j))) & 0xFF);
   }
-  process_block(block, digest);
+  process_block(block, H);
 }
 
-// void info(uint8_t* digest)
-// {
-//   int i;
-//   for (i = 0; i < 20; ++i)
-//     printf("%02x", digest[i]);
-//   printf("\n");
-// }
+#define TEST1 "abc"
+#define TEST2 "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
+// #define TEST3   "a"
+// #define TEST4a  "01234567012345670123456701234567"
+// #define TEST4b  "01234567012345670123456701234567"
+// an exact multiple of 512 bits
+#define TEST4   TEST4a TEST4b
+#define M 1000000
 
+void info(uint32_t* digest) 
+{
+  printf("  sha1: %08x %08x %08x %08x %08x\n", 
+         digest[0], 
+         digest[1], 
+         digest[2], 
+         digest[3], 
+         digest[4]);
+}
 int main(int argc, const char *argv[]) 
 {
-  uint8_t digest[20];
-  uint8_t* message = "abc";
-  sha1(message, strlen(message), digest);
+  uint32_t digest[5];
+  // sha1(TEST1, strlen(TEST1), digest);
+  // sha1(TEST2, strlen(TEST2), digest);
+
+  uint8_t* ma = (uint8_t*) malloc(M);
+  memset(ma, 'a', M);
+  sha1(ma, M, digest);
+  info(digest);
+  free(ma);
   return 0;
 }
