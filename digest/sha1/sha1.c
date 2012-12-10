@@ -143,6 +143,7 @@ void verify(char* expected, uint32_t* digest)
 
 int main(int argc, const char *argv[]) 
 {
+  int i;
   uint32_t digest[5];
 
   sha1(TEST1, strlen(TEST1), digest);
@@ -151,12 +152,17 @@ int main(int argc, const char *argv[])
   sha1(TEST2, strlen(TEST2), digest);
   verify("84983e44 1c3bd26e baae4aa1 f95129e5 e54670f1", digest);
 
-  uint8_t* ma = (uint8_t*) malloc(M);
-  memset(ma, 'a', M);
-  sha1(ma, M, digest);
-  free(ma);
-
+  uint8_t* TEST3 = (uint8_t*) malloc(M);
+  memset(TEST3, 'a', M);
+  sha1(TEST3, M, digest);
+  free(TEST3);
   verify("34aa973c d4c4daa4 f61eeb2b dbad2731 6534016f", digest);
+  
+  uint8_t TEST4[640];
+  for (i = 0; i < 640; i++)
+    TEST4[i] = i % 8 + '0';
+  sha1(TEST4, 640, digest);
+  verify("dea356a2 cddd90c7 a7ecedc5 ebb56393 4f460452", digest);
 
   return 0;
 }
