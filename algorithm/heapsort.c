@@ -1,19 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*struct node {*/
-/*  int no;*/
-/*  struct node *left;*/
-/*  struct node *right;*/
-/*};*/
-
-
+// heapsort is unstable. Consider the following tree:
+//                  10
+//                 /  \
+//                9    9_
+// 9 is before 9_.
+// After 10 is swaped with 9_, the tree becomes:
+//                  9_
+//                 / \
+//                9  10
+// 9 is now after 9_.
 void info(int array[], int len) {
 	int i;
 	printf("=======================\n");
 	for (i = 0; i < len; i++)
 		printf("array[%d] = %d\n", i, array[i]);
 }
+
 void swap(int * left, int * right) {
 	int temp;
 	temp = *left;
@@ -24,8 +28,6 @@ void swap(int * left, int * right) {
 void adjust_heap(int index, int array[], int len) {
 	int left = 2 * index;
 	int right = left + 1;
-	if (left >= len) 
-		printf("left=%d, len=%d\n", left, len);
 	int target = (right < len && array[left] < array[right]) ? right : left;
 	if (array[index] < array[target]) {
 		swap(&array[index], &array[target]);
