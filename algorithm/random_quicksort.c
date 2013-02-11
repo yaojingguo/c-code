@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Quicksort is unstable. For example, the original array is 1 5 5_ 4. The 
+// array after quicksorting is 1 4 5_ 5.
+
 int rand_(int min, int max) {
   return min + random() % (max-min+1);
 }
@@ -13,16 +16,16 @@ int swap(int arr[], int i, int j) {
 }
 
 int partition(int arr[], int p, int r) {
-  int i, j;
+  int j, i;
 
-  for (i = p, j = p-1; i < r; i++) 
-    if (arr[i] < arr[r]) {
-      j++;
-      swap(arr, j, i);
+  for (i = p-1, j = p; j <= r-1; j++) 
+    if (arr[j] <= arr[r]) {
+      i++;
+      swap(arr, i, j);
     }
 
-  swap(arr, ++j, r);
-  return j;
+  swap(arr, ++i, r);
+  return i;
 }
 
 int random_partition(int arr[], int p, int r) {
