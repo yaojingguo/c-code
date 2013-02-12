@@ -1,9 +1,23 @@
 #include <stdio.h>
 
+// The position of const keyword decides what is is const. If const is before 
+// *, the data pointed by the pointer is const. Otherwise, the pointer itself 
+// is const. Data is const:
+//  1) const char * arg
+//  2) char const * arg
+// Pointer is const: char * const arg
+
 /*
  * const data pointed by the pointer.
  */
-void constData(const char *arg) 
+void constData1(const char *arg) 
+{
+    // can't be compiled
+    // *arg = 'A';
+
+    arg = "A";
+}
+void constData2(char const *arg) 
 {
     // can't be compiled
     // *arg = 'A';
@@ -36,24 +50,26 @@ void constPointerArray(char * const argv[])
 
 int main(int argc, const char *argv[]) 
 {
-    //
-    // *(argv[0]) = 'a';
-    // argv
+    // *(argv[0]) = 'a'; // wont compile
+    argv[0] = "A";
+    argv = NULL;
 
-    //
     char str1[] = "abc";
     char str2[] = "123";
     char *pp[2];
     *pp = str1;
     *(pp+1) = str2;
 
-    constData(str1);
+    constData1(str1);
+    printf("%s\n", str1);
+
+    constData2(str1);
     printf("%s\n", str1);
 
     constPointer(str1);
     printf("%s\n", str1);
 
-    // constPointerArray(pp);
+    constPointerArray(pp);
     printf("%s\n", *pp);
     printf("%s\n", *(pp+1));
 
