@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+// There are 3 three user IDs for every process:
+// 1) real user ID
+// 2) effective user ID
+// 3) saved set-user-ID
+// fork will not change any of them. exec will not not change any of them if 
+// set-user-ID bit is off.
+
 void test_get_uid()
 {
   uid_t real;
