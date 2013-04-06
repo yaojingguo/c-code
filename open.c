@@ -22,6 +22,9 @@ int main(int argc, const char *argv[])
   if (written != -1)
     printf("written: %d\n", written);
 
+  if (write(fd, "xxx\n", 4) != 4)
+    printf("writen error\n");
+
   close(fd);
   return 0;
 }
