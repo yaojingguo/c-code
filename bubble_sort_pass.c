@@ -18,6 +18,14 @@ void swap(int *a, int *b) {
     *b = temp;
 }
 
+void info_array(int A[], int size) {
+    int i;
+    printf("------------\n");
+    for (i = 0; i < size; i++)
+        printf("A[%d] = %d\n", i, A[i]);
+    printf("------------\n");
+}
+
 // A 2-pass in bubble sort.
 void bubble_2_pass(int A[], int size) {
     int i;
@@ -28,14 +36,6 @@ void bubble_2_pass(int A[], int size) {
     }
 }
 
-void info_array(int A[], int size) {
-    int i;
-    printf("------------\n");
-    for (i = 0; i < size; i++)
-        printf("A[%d] = %d\n", i, A[i]);
-    printf("------------\n");
-}
-
 void test1() {
     int A[] = {1, 3, 1, 2, 4, 4, 8, 3, 4, 4};
     bubble_2_pass(A, 10);
@@ -43,7 +43,6 @@ void test1() {
 }
 
 void test2() {
-    // 20, 1, 10
     int A[] = {10, 6, 4, 20, 8, 11};
     bubble_2_pass(A, 6);
     info_array(A, 6); 
