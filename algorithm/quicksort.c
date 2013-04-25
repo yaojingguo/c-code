@@ -14,7 +14,7 @@ void quicksort(int A[], int p, int r)
 {
     int q;
     if (p < r) {
-        q = partition(A, p, r);
+        q = partition2(A, p, r);
         quicksort(A, p, q-1);
         quicksort(A, q+1, r);
     } 
@@ -25,7 +25,6 @@ void quicksort(int A[], int p, int r)
 // A[i+1...j-1] >= A[r]
 int partition(int A[], int p, int r)
 {
-    printf("p-------------\n");
     int i;
     int j;
     i = p - 1;
@@ -36,6 +35,26 @@ int partition(int A[], int p, int r)
         }
     swap(&A[i+1], &A[r]);
     return i+1;
+}
+
+int partition2(int A[], int p, int r)
+{
+    int L, M, H, x;
+    L = p;
+    H = r;
+    x = A[L];
+    while (L < H) {
+        while (A[H] >= x && L < H) {
+            H--;
+        }
+        A[L] = A[H];
+        while (A[L] <= x && L < H) {
+            L++;
+        }
+        A[H] = A[L];
+    }
+    A[L] = x;
+    return L;
 }
 
 void info(int A[], int p, int r) 
@@ -85,8 +104,8 @@ void test3()
 
 int main(int argc, const char *argv[]) 
 {
-    // test1();
-    // test2();
+    test1();
+    test2();
     test3();
 }
 
