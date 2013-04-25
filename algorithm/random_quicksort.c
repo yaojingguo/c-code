@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Quicksort is unstable. For example, the original array is 1 5 5_ 4. The 
-// array after quicksorting is 1 4 5_ 5.
-
 int rand_(int min, int max) {
   return min + random() % (max-min+1);
 }
