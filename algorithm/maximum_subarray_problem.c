@@ -103,6 +103,24 @@ int maxSum5(int *arr, int size)
     return max_so_far;
 }
 
+// O(N) algorithm as specified by 
+// http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_B.pdf
+int maxSum6(int arr[], int size)
+{
+  int i, x, y, z, sum;
+  x = 0;
+  y = 0;
+  z = 0;
+  for (i = 0; i < size; i++) {
+    x += arr[i];
+    if (x < y) y = x;
+    sum = x - y;
+    if (sum > z)
+      z = sum;
+  }
+  return z;
+}
+
 int main(int argc, const char *argv[]) 
 {
     int data[] = {31, -41, 59, 26, -53, 58, 97, -93, -23, 84};
@@ -111,5 +129,6 @@ int main(int argc, const char *argv[])
     printf("result: %d\n", maxSum3(data, 10));
     printf("result: %d\n", maxSum4(data, 0, 9));
     printf("result: %d\n", maxSum5(data, 10));
+    printf("result: %d\n", maxSum6(data, 10));
     return 0;
 }
