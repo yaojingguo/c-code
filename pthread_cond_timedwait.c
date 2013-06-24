@@ -36,7 +36,7 @@ int main(int argc, const char *argv[])
   int ret = pthread_cond_timedwait(&c, &m, &deadline);
   if (ret = ETIMEDOUT) 
     printf("timeout: %d\n", ret);
-  assert(pthread_cond_destroy(&c));
-  assert(pthread_mutex_destroy(&m));
+  assert(pthread_cond_destroy(&c) == 0);
+  assert(pthread_mutex_destroy(&m) == 0);
   return 0;
 }
