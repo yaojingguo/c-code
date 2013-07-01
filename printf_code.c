@@ -3,6 +3,8 @@
 #define SIZE 10000
 
 // One printf may invoke write system call multiple times.
+// Refer to "man 3 stdio" and "man 3 flockfile".
+// http://stackoverflow.com/questions/467938/stdout-thread-safe-in-c-on-linux
 int main(int argc, const char *argv[]) 
 {
   char msg[SIZE];
