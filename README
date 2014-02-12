@@ -4,3 +4,5 @@ Various code helping me learning C.
 For file and directory names, use _ instead of - since - is illegal 
 for identifer. Sometimes we want to use file or directory names for 
 identifiers.
+
+random() return a number between 0 (inclusive) and RAND_MAX(inclusive).
