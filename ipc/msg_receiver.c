@@ -1,5 +1,6 @@
-//process2.cc
-
+/*
+ * Receive a message.
+ */
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>

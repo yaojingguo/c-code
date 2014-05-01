@@ -1,7 +1,6 @@
 /*
- * a.c
- * write a random number between 0 and 999 to the shm every 1 second
-*/
+ * Write a random number between 0 and 999 to the shm every 1 second.
+ */
 #include<stdio.h>
 #include<unistd.h>
 #include<sys/shm.h>
@@ -20,7 +19,7 @@ int main(){
   if (share == ((int*) -1)) {
     perror("shmat");
   }
-	while(1){
+	while (1) {
 		num = random() % 1000;
 		*share = num;
 		printf("write a random number %d\n", num);

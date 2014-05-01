@@ -1,6 +1,5 @@
 /*
- * b.c
- * read from the shm every 1 second
+ * Read from the shm every 1 second.
 */
 #include<stdio.h>
 #include<unistd.h>

@@ -1,5 +1,6 @@
-//process1.cc
-
+/*
+ * Send a message.
+ */
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  int shm_id=shmget(key, MAX_SHM_SIZE, IPC_CREAT | 0666);
+  int shm_id = shmget(key, MAX_SHM_SIZE, IPC_CREAT | 0600);
   if(-1 == shm_id) {
     perror("shmget");
     return 1;
