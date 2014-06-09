@@ -16,6 +16,7 @@ void test1()
 
 void test2()
 {
+  printf("=== test2 ====\n");
 	printf("%10s\n", "abc");
 	printf("%.s\n", "abc");
 	printf("%2d\n", 19999);
@@ -27,9 +28,19 @@ void test2()
 	printf("%.17f\n", a);
 }
 
+void test3()
+{
+  printf("=== test3 ====\n");
+  printf("%.17f\n", 0.1f);
+  printf("%.17f\n", 0.1);
+  printf("size: %d\n", sizeof(0.1f));
+  printf("size: %d\n", sizeof(0.1));
+}
+
 int main(int argc, const char *argv[]) 
 {
   // test1();
   test2();
+  test3();
   return 0;
 }
