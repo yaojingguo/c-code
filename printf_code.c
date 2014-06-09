@@ -12,7 +12,6 @@ void test1()
   for (int i = 0; i < SIZE - 1; i++)
     msg[i] = 'a';
   printf("msg: %s\n", msg);
-  return 0;
 }
 
 void test2()
@@ -22,13 +21,15 @@ void test2()
 	printf("%2d\n", 19999);
 	printf("%.6d\n", 12345);
 	printf("%a\n", 8.5);
-	printf("%a\n", 1024 * 1024.0);
+	printf("%a\n", 1024.0);
+	printf("%a\n", 512.0);
   float a = 0.1;
 	printf("%.17f\n", a);
 }
 
 int main(int argc, const char *argv[]) 
 {
-  test1();
+  // test1();
   test2();
+  return 0;
 }
