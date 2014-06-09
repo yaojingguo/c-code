@@ -5,7 +5,7 @@
 // One printf may invoke write system call multiple times.
 // Refer to "man 3 stdio" and "man 3 flockfile".
 // http://stackoverflow.com/questions/467938/stdout-thread-safe-in-c-on-linux
-int main(int argc, const char *argv[]) 
+void test1()
 {
   char msg[SIZE];
   msg[SIZE-1] = '\0';
@@ -13,4 +13,22 @@ int main(int argc, const char *argv[])
     msg[i] = 'a';
   printf("msg: %s\n", msg);
   return 0;
+}
+
+void test2()
+{
+	printf("%10s\n", "abc");
+	printf("%.s\n", "abc");
+	printf("%2d\n", 19999);
+	printf("%.6d\n", 12345);
+	printf("%a\n", 8.5);
+	printf("%a\n", 1024 * 1024.0);
+  float a = 0.1;
+	printf("%.17f\n", a);
+}
+
+int main(int argc, const char *argv[]) 
+{
+  test1();
+  test2();
 }
