@@ -1,20 +1,10 @@
 #include <stdio.h>
 
-#define NO 0
+#define P(name) printf("%s\n", name);
+#define Q(name) printf("name: %s, %s\n", name, (name));
 
-int main(int argc, const char *argv[]) 
+int main()
 {
-#if NO
-  printf("#if\n");
-#endif
-
-#if defined(NO)
-  printf("#if defined\n");
-#endif
-
-#ifdef NO
-  printf("#ifdef\n");
-#endif
-
-  return 0;
+	P("ABC");
+	Q("DEF");
 }
