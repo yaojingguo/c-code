@@ -16,7 +16,7 @@ void test1()
 
 void test2()
 {
-  struct servent * sv = getservbyname("ftp", "tcp");
+  struct servent * sv = getservbyname("http", "tcp");
   int i;
 
   printf("s_name: %s\n", sv->s_name);
@@ -25,6 +25,8 @@ void test2()
     printf("s_aliases[%d]: %s\n", i, sv->s_aliases[i]);
     i++;
   }
+  // Port 80 in hex is 0x50. Only s_port's lower part is used, so 0x50 in 
+  // network order is 0x5000.
   printf("s_port: %x, %x\n", sv->s_port, ntohl(sv->s_port));
   printf("s_proto: %s\n", sv->s_proto);
 }
