@@ -29,7 +29,7 @@ void test2()
   printf("s_proto: %s\n", sv->s_proto);
 }
 
-test3()
+void test3()
 {
   in_addr_t addr = inet_addr("171.64.64.64");
   printf("in_addr_t: %X\n", addr);	
