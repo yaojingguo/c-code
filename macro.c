@@ -5,6 +5,6 @@
 
 int main()
 {
-	P("ABC");
-	Q("DEF");
+  P("ABC");
+  Q("DEF");
 }
