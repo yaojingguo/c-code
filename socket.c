@@ -26,10 +26,6 @@ void test2()
     i++;
   }
 
-
-
-
-
   //
   // struct servent {
   //     char  *s_name;       /* official service name */
