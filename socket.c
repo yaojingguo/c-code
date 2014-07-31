@@ -25,9 +25,35 @@ void test2()
     printf("s_aliases[%d]: %s\n", i, sv->s_aliases[i]);
     i++;
   }
-  // Port 80 in hex is 0x50. Only s_port's lower part is used, so 0x50 in 
-  // network order is 0x5000.
-  printf("s_port: %x, %x\n", sv->s_port, ntohl(sv->s_port));
+
+
+
+
+
+  //
+  // struct servent {
+  //     char  *s_name;       /* official service name */
+  //     char **s_aliases;    /* alias list */
+  //     int    s_port;       /* port number */
+  //     char  *s_proto;      /* protocol to use */
+  // }
+  //
+  // s_port is split into two parts: the lower short part and the higher short 
+  // part in network order. Only the higher part is used. Port 80 in hex is 
+  // 0x50. It is stored in memory as  the following diagram shows:
+  //
+  //            +----+
+  // 0x00000000 | 00 |
+  //            +----+
+  // 0x00000001 | 50 |
+  //            +----+
+  // 0x00000002 | 00 |
+  //            +----+
+  // 0x00000003 | 00 |
+  //            +----+
+  //
+  // So printf will print it as 0x00005000.
+  printf("s_port: 0x%08X\n", sv->s_port);
   printf("s_proto: %s\n", sv->s_proto);
 }
 
