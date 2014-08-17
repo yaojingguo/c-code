@@ -1,3 +1,4 @@
+// Reed-Solomon Coding
 #include <stdio.h>
 
 #define W 4
