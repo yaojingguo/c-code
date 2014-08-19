@@ -6,35 +6,6 @@ struct person {
   int no;
 };
 
-// old idr interface
-/*
-static int __init example_init_old(void)
-{
-  struct idr id_huh;
-  struct person yao = { .no = 10, };
-  struct person *result;
-  int id;
-  int ret;
-
-  idr_init(&id_huh);
-  if (!(ret = idr_pre_get(&id_huh, GFP_KERNEL))) {
-    printk(KERN_INFO "idr_pre_get failed\n");
-    return -ret;
-  }
-  if (ret = idr_get_new(&id_huh, &yao, &id)) {
-    printk(KERN_INFO "idr_get_new failed\n");
-    return -ret;
-  }
-
-  result = idr_find(&id_huh, id);
-  if (result != NULL) 
-    printk(KERN_INFO "no: %d\n", result->no);
-  else 
-    printk("find null\n");
-  return 0;
-}
-*/
-
 static int __init example_init(void)
 {
   struct idr id_huh;
