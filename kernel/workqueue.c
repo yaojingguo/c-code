@@ -1,4 +1,5 @@
 #include <linux/kernel.h>
+#include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/workqueue.h>
 
@@ -11,14 +12,14 @@ typedef struct {
 	int x;
 } my_work_t;
 
-my_work_t *work, *work2;
-
-static void my_wq_function(struct work_struct *work)
+static void my_wq_function(struct work_struct *w)
 {
-	my_work_t *my_work = (my_work_t*) work;
+	my_work_t *my_work = (my_work_t*) w;
 	printk("my_work.x %d\n", my_work->x);
-	kfree((void*) work);
+	kfree((void*) w);
 }
+
+my_work_t *work, *work2;
 
 int init_module(void)
 {
@@ -30,7 +31,7 @@ int init_module(void)
 		if (work) {
 			INIT_WORK((struct work_struct *) work, my_wq_function);
 			work->x = 1;
-			ret = queue_work(my_wq, (struct work_struct) work);
+			ret = queue_work(my_wq, (struct work_struct *) work);
 		}
 
 		work2 = (my_work_t *) kmalloc(sizeof(my_work_t), GFP_KERNEL);
@@ -49,4 +50,3 @@ void cleanup_module(void)
 	destroy_workqueue(my_wq);
 	return;
 }
-

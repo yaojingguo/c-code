@@ -8,6 +8,7 @@ obj-m += hello.o
 obj-m += kfifo.o
 obj-m += inttype-example.o
 obj-m += idr_test.o
+obj-m += workqueue.o
 
 module:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
