@@ -4,7 +4,7 @@
 
 MODULE_LICENSE("GPL");
 
-void atomic_test()
+static void atomic_test(void)
 {
 	atomic_t v;
 	atomic_t u = ATOMIC_INIT(0);
@@ -15,7 +15,7 @@ void atomic_test()
 	printk("u: %d, v: %d\n", atomic_read(&u), atomic_read(&v));
 }
 
-void bit_op_test()
+static void bit_op_test(void)
 {
 	unsigned long word = 0;
 
@@ -35,6 +35,8 @@ void bit_op_test()
 
 int init_module(void)
 {
+  atomic_test();
+  bit_op_test();
   return 0;
 }
 
