@@ -1,6 +1,14 @@
 *.o
 *.S
+*.ko
 *.so
+*.mod.c
+*.o.cmd
+*.ko.cmd
 a.out
 https_client
 cscope*
+
+.tmp_versions
+Module.symvers
+modules.order
