@@ -15,6 +15,7 @@ obj-m += atomic.o
 obj-m += spinlock_usage.o
 obj-m += rwlock_usage.o
 obj-m += semaphore_usage.o
+obj-m += mutex_usage.o
 
 module:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
