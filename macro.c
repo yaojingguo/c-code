@@ -5,6 +5,8 @@
 
 #define eprintf(...) fprintf(stderr, __VA_ARGS__);
 
+#define cat(name) fun##name
+
 void test0()
 {
   P("ABC");
@@ -27,6 +29,7 @@ void test1()
 void test2()
 {
   eprintf("%d %s\n",  3, "pigs");
+  cat(c)();
 }
 
 int main()
