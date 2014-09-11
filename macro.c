@@ -3,7 +3,9 @@
 #define P(name) printf("%s\n", name);
 #define Q(name) printf("name: %s, %s\n", name, (name));
 
-int test0()
+#define eprintf(...) fprintf(stderr, __VA_ARGS__);
+
+void test0()
 {
   P("ABC");
   Q("DEF");
@@ -17,13 +19,19 @@ void func()
   printf("hi, man\n");
 }
 
-int test1()
+void test1()
 {
   abc();
+}
+
+void test2()
+{
+  eprintf("%d %s\n",  3, "pigs");
 }
 
 int main()
 {
   test0();
   test1();
+  test2();
 }
