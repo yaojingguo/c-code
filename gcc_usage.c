@@ -5,8 +5,33 @@ void __f () {
 }
 void f () __attribute__((weak, alias ("__f")));
 
-int main()
+void test0()
 {
   f();
+}
+
+void test1()
+{
+  int a;
+  __typeof__(a) b;
+
+  a = b = 10;
+  printf("a = %d, b = %d\n", a, b);
+}
+
+// Use 'gcc -Wall' to compile
+void test2()
+{
+  int __attribute__((unused)) a;
+  a = 10;
+}
+
+int main()
+{
+  test0();
+  test1();
+  test2();
+
+  return 0;
 }
 
