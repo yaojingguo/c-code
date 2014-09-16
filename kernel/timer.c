@@ -30,6 +30,6 @@ int init_module(void)
 
 void cleanup_module(void)
 {
-  printk("cleanup_module\n");
+  printk("timer cleanup_module\n");
 }
 
