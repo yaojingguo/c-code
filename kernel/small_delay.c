@@ -8,7 +8,7 @@ int init_module(void)
 {
   int i;
   printk("before delay\n");
-  for (i = 0; i < 1000; i++)
+  for (i = 0; i < 10; i++)
     mdelay(100);
   printk("after delay\n");
   return 0;
