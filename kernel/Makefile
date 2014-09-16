@@ -18,6 +18,7 @@ obj-m += semaphore_usage.o
 obj-m += mutex_usage.o
 obj-m += seqlock_usage.o
 obj-m += preempt_usage.o
+obj-m += timer.o
 
 module:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
