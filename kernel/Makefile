@@ -19,6 +19,8 @@ obj-m += mutex_usage.o
 obj-m += seqlock_usage.o
 obj-m += preempt_usage.o
 obj-m += timer.o
+obj-m += busy_loop.o
+obj-m += small_delay.o
 
 module:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
