@@ -18,16 +18,21 @@ static void one(void)
 static int two(void)
 {
   void *percpu_ptr;
-  unsigned *foo;
+  unsigned long *foo;
+  unsigned long val;
 
-  percpu_ptr = alloc_percpu(unsigned);
+  percpu_ptr = alloc_percpu(unsigned long);
   if (!percpu_ptr) {
     printk("alloc_percpu failed\n");
     return -ENOMEM;
   }
-  foo = get_cpu_var(percpu_ptr);
+  foo = get_cpu_ptr(percpu_ptr);
   *foo = 10;
-  printk("foo: %u\n", *foo);
+  val = *foo;
+  put_cpu_ptr(percpu_ptr);
+  free_percpu(percpu_ptr);
+  printk("foo: %lu\n", *foo);
+
   return 0;
 }
 
@@ -42,9 +47,8 @@ int init_module(void)
   return 0;
 }
 
-
 void cleanup_module(void)
 {
-  printk("slab_usage cleanup_module\n");
+  printk("percpu cleanup_module\n");
 }
 
