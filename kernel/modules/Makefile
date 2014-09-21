@@ -24,6 +24,7 @@ obj-m += small_delay.o
 obj-m += schedule_timeout.o
 obj-m += mem_page.o
 obj-m += malloc_usage.o
+obj-m += slab_usage.o
 
 module:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
