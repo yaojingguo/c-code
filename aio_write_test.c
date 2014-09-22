@@ -6,7 +6,6 @@
  * source tree.
  */
 
-//#define _XOPEN_SOURCE 600
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -17,9 +16,10 @@
 #include <stdlib.h>
 #include <aio.h>
 
+#define BUF_SIZE 512
+
 int main() {
   char filename[256];
-  #define BUF_SIZE 512
   char buf[BUF_SIZE];
   char check[BUF_SIZE+1];
   int fd;
@@ -27,15 +27,13 @@ int main() {
   int err;
   int ret;
 
-  snprintf(filename, sizeof(filename), "pts_aio_write_1_1_%d", getpid());
+  snprintf(filename, sizeof(filename), __FILE__"_%d", getpid());
   unlink(filename);
   fd = open(filename, O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
   if (fd == -1) {
-    printf( " Error at open(): %s\n", strerror(errno));
+    printf( "open() error: %s\n", strerror(errno));
     exit(1);
   }
-
-  unlink(filename);
 
   memset(buf, 0xaa, BUF_SIZE);
   memset(&aiocb, 0, sizeof(struct aiocb));
@@ -44,21 +42,19 @@ int main() {
   aiocb.aio_nbytes = BUF_SIZE;
 
   if (aio_write(&aiocb) == -1) {
-    printf( " Error at aio_write(): %s\n", strerror(errno));
-    close(fd);
-    exit(2);
+    printf("aio_write() error: %s\n", strerror(errno));
+		goto ret;
   }
 
-  /* Wait until completion */
-  while (aio_error (&aiocb) == EINPROGRESS);
+  while (aio_error (&aiocb) == EINPROGRESS)
+		;
 
   err = aio_error(&aiocb);
   ret = aio_return(&aiocb);
 
   if (err != 0) {
-    printf ( " Error at aio_error() : %s\n", strerror (err));
-    close (fd);
-    exit(2);
+    printf ("aio_error() error: %s\n", strerror(err));
+		goto ret;
   }
 
   if (ret != BUF_SIZE) {
