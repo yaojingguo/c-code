@@ -6,21 +6,6 @@
  * source tree.
  */
 
-/*
- * assertion:
- *
- *      The aio_write() function shall write aio_nbytes to the files associated
- *      with aio_fildes from the buffer pointer to by aio_buf.
- *
- * method:
- *
- *      - open file
- *      - write 512 bytes using aio_write
- *      - read 513 bytes
- *      - check read data
- *
- */
-
 //#define _XOPEN_SOURCE 600
 #include <stdio.h>
 #include <sys/types.h>
@@ -32,10 +17,8 @@
 #include <stdlib.h>
 #include <aio.h>
 
-#define TNAME "aio_write/1-1.c"
-
 int main() {
-  char tmpfname[256];
+  char filename[256];
   #define BUF_SIZE 512
   char buf[BUF_SIZE];
   char check[BUF_SIZE+1];
@@ -44,15 +27,15 @@ int main() {
   int err;
   int ret;
 
-  snprintf(tmpfname, sizeof(tmpfname), "pts_aio_write_1_1_%d", getpid());
-  unlink(tmpfname);
-  fd = open(tmpfname, O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
+  snprintf(filename, sizeof(filename), "pts_aio_write_1_1_%d", getpid());
+  unlink(filename);
+  fd = open(filename, O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
   if (fd == -1) {
-    printf(TNAME " Error at open(): %s\n", strerror(errno));
+    printf( " Error at open(): %s\n", strerror(errno));
     exit(1);
   }
 
-  unlink(tmpfname);
+  unlink(filename);
 
   memset(buf, 0xaa, BUF_SIZE);
   memset(&aiocb, 0, sizeof(struct aiocb));
@@ -61,7 +44,7 @@ int main() {
   aiocb.aio_nbytes = BUF_SIZE;
 
   if (aio_write(&aiocb) == -1) {
-    printf(TNAME " Error at aio_write(): %s\n", strerror(errno));
+    printf( " Error at aio_write(): %s\n", strerror(errno));
     close(fd);
     exit(2);
   }
@@ -73,13 +56,13 @@ int main() {
   ret = aio_return(&aiocb);
 
   if (err != 0) {
-    printf (TNAME " Error at aio_error() : %s\n", strerror (err));
+    printf ( " Error at aio_error() : %s\n", strerror (err));
     close (fd);
     exit(2);
   }
 
   if (ret != BUF_SIZE) {
-    printf(TNAME " Error at aio_return()\n");
+    printf( " Error at aio_return()\n");
     close(fd);
     exit(2);
   }
@@ -87,7 +70,7 @@ int main() {
   /* check the values written */
 
   if (lseek(fd, 0, SEEK_SET) == -1) {
-    printf(TNAME " Error at lseek(): %s\n",
+    printf( " Error at lseek(): %s\n",
            strerror(errno));
     close(fd);
     exit(2);
@@ -97,25 +80,27 @@ int main() {
 
   check[BUF_SIZE] = 1;
   if (read(fd, check, BUF_SIZE + 1) != BUF_SIZE) {
-    printf(TNAME " Error at read(): %s\n",
+    printf( " Error at read(): %s\n",
            strerror(errno));
     close(fd);
     exit(2);
   }
 
   if ( check[BUF_SIZE] != 1) {
-    printf(TNAME " Buffer overflow\n");
+    printf( " Buffer overflow\n");
     close(fd);
     exit(2);
   }
 
   if (memcmp(buf, check, BUF_SIZE)) {
-    printf(TNAME " Bad value in buffer\n");
+    printf( " Bad value in buffer\n");
     close(fd);
     exit(2);
   }
+	printf("Test passed\n");
 
+ret:
+	unlink(filename);
   close(fd);
-  printf ("Test PASSED\n");
   return 0;
 }
