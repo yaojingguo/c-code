@@ -74,9 +74,10 @@ int main() {
 
   for (i = 0; i < SIZE; i++) 
     if (buf[i] != check[i]) {
-      printf(TNAME " read values are corrupted\n");
+      printf(" read values are corrupted\n");
 			goto ret;
     }
+  printf("Test passed\n");
 
 ret:
   close(fd);
