@@ -16,12 +16,12 @@
 #include <stdlib.h>
 #include <aio.h>
 
-#define BUF_SIZE 512
+#define SIZE 512
 
 int main() {
   char filename[256];
-  char buf[BUF_SIZE];
-  char check[BUF_SIZE+1];
+  char buf[SIZE];
+  char check[SIZE+1];
   int fd;
   struct aiocb aiocb;
   int err;
@@ -30,16 +30,16 @@ int main() {
   snprintf(filename, sizeof(filename), __FILE__"_%d", getpid());
   unlink(filename);
   fd = open(filename, O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
-  if (fd == -1) {
+  if (fd < 0) {
     printf( "open() error: %s\n", strerror(errno));
     exit(1);
   }
 
-  memset(buf, 0xaa, BUF_SIZE);
+  memset(buf, 0x00, SIZE);
   memset(&aiocb, 0, sizeof(struct aiocb));
   aiocb.aio_fildes = fd;
   aiocb.aio_buf = buf;
-  aiocb.aio_nbytes = BUF_SIZE;
+  aiocb.aio_nbytes = SIZE;
 
   if (aio_write(&aiocb) == -1) {
     printf("aio_write() error: %s\n", strerror(errno));
@@ -57,42 +57,33 @@ int main() {
 		goto ret;
   }
 
-  if (ret != BUF_SIZE) {
+  if (ret != SIZE) {
     printf( " Error at aio_return()\n");
     close(fd);
     exit(2);
   }
 
-  /* check the values written */
-
   if (lseek(fd, 0, SEEK_SET) == -1) {
-    printf( " Error at lseek(): %s\n",
-           strerror(errno));
-    close(fd);
-    exit(2);
+    printf( "lseek() error: %s\n", strerror(errno));
+		goto ret;
   }
 
-  /* we try to read more than we wrote to be sure of the size written */
-
-  check[BUF_SIZE] = 1;
-  if (read(fd, check, BUF_SIZE + 1) != BUF_SIZE) {
-    printf( " Error at read(): %s\n",
-           strerror(errno));
-    close(fd);
-    exit(2);
+  check[SIZE] = 1;
+  if (read(fd, check, SIZE + 1) != SIZE) {
+    printf( "read() error: %s\n", strerror(errno));
+		goto ret;
   }
 
-  if ( check[BUF_SIZE] != 1) {
-    printf( " Buffer overflow\n");
-    close(fd);
-    exit(2);
+  if ( check[SIZE] != 1) {
+    printf( "Buffer overflow\n");
+		goto ret;
   }
 
-  if (memcmp(buf, check, BUF_SIZE)) {
-    printf( " Bad value in buffer\n");
-    close(fd);
-    exit(2);
+  if (memcmp(buf, check, SIZE)) {
+    printf( "Bad value in buffer\n");
+		goto ret;
   }
+
 	printf("Test passed\n");
 
 ret:
