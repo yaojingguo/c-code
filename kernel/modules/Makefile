@@ -26,6 +26,7 @@ obj-m += mem_page.o
 obj-m += malloc_usage.o
 obj-m += slab_usage.o
 obj-m += percpu.o
+obj-m += mod_param.o
 
 module:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
