@@ -108,11 +108,11 @@ uint8_t* sha1(uint8_t *message, uint64_t l, uint32_t* H)
   memset(block, 0, 64);
   memcpy(block, message, nremainder);
   if (nremainder >= 56 ) { 
-    block[nremainder++] = 0x80; 
+    block[nremainder] = 0x80; 
     process_block(block, H);
     memset(block, 0, 64);
   } else {
-    block[nremainder++] = 0x80;
+    block[nremainder] = 0x80;
   }
 
   int j;
