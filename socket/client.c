@@ -36,15 +36,14 @@ int main(int argc, char *argv[])
     return 1;
   } 
 
-  printf(">>> connect\n");
+  printf("Connecting...\n");
 
   if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
     printf("\n Error : Connect Failed \n");
     return 1;
   } 
 
-  printf("<<< connect\n");
-  printf("Pause: ");
+  printf("Connected, continue?(y/n): ");
   char c;
   scanf("%c", &c);
   if (c != 'y')
