@@ -18,6 +18,17 @@ void test_short()
 
 void test_int()
 {
+  uint32_t h_ip;
+  uint32_t n_ip;
+
+  h_ip = 0x01020304u;
+  n_ip = htonl(h_ip);
+  assert(n_ip == 0x04030201u);
+  assert(ntohl(n_ip) == h_ip);
+}
+
+void test_inet_ntop()
+{
 }
 
 int main(void)
