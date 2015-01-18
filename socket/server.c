@@ -29,15 +29,15 @@ int main(int argc, char *argv[])
 
   listen(listenfd, 10); 
 
-  char c;
 
   while(1) {
     connfd = accept(listenfd, (struct sockaddr*)NULL, NULL); 
 
-    printf("Send data y/n: ");
-    scanf("%c", &c);
-    if (c != 'y')
-      return 1;
+      // char c;
+    // printf("Send data y/n: ");
+    // scanf("%c", &c);
+    // if (c != 'y')
+    //   return 1;
 
     ticks = time(NULL);
     snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
