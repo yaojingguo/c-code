@@ -1,3 +1,4 @@
-server
-client
-byte_order
+*
+!*.c
+!*.h
+!Makefile
