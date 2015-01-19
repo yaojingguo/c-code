@@ -1,8 +1,10 @@
-PROGS=server client byte_order
+PROGS=server client byte_order my_client
 
 all: ${PROGS}
 
-server: server.o
+my_client: my_client.o lib.o
+
+server: server.o lib.o
 
 client: client.o
 

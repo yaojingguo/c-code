@@ -34,18 +34,11 @@ int main(int argc, char *argv[])
     return 1;
   } 
 
-  // printf("Connecting...\n");
-
   if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
     printf("Error : Connect Failed \n");
     return 1;
   } 
 
-  // printf("Connected, continue?(y/n): ");
-  // char c;
-  // scanf("%c", &c);
-  // if (c != 'y')
-  //   return 1;
 
   int i = 0;
   while ((i = read(sockfd, buf, sizeof(buf)-1)) > 0) {

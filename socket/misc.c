@@ -4,6 +4,7 @@
 
 #define LEN 1024
 
+
 void test_gethostname()
 {
   char name[LEN];
