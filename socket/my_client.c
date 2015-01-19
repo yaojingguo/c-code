@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
   if (argc < 2) 
     local_ip = "127.0.0.1";
   else
-    local_ip = "10.200.130.178";
+    local_ip = argv[1];
 
   if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
     exit_failure();
