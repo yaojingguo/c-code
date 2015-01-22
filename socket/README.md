@@ -1,3 +1,2 @@
 # TODO
-- getpeername
 - getaddrinfo
