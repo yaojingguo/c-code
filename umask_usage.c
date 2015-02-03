@@ -35,10 +35,14 @@ void create_file(const char *pathname, mode_t mode)
 {
   int fd;
 
+  if(access(pathname, F_OK) != -1) 
+    if (remove(pathname) != 0)
+      exit_failure();
+
   if ((fd = creat(pathname, mode)) < 0)
     exit_failure();
 
-  if (write(fd, "B\n", 2) < 0)
+  if (write(fd, "C\n", 2) < 0)
     exit_failure();
 
   if (close(fd) != 0)
@@ -49,6 +53,5 @@ int main(int argc, char *argv[])
 {
   create_file("0666", 0666); 
   create_file("0777", 0777); 
-  // read_file("foo/one");
   return 0;
 }
