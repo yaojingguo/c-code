@@ -12,3 +12,14 @@ void p(const char *s)
     exit(0);
   }
 }
+
+void __exit_failure(const char *s) 
+{
+  perror(s);
+  exit(EXIT_FAILURE);
+}
+
+void exit_failure() 
+{
+  __exit_failure(NULL);
+}

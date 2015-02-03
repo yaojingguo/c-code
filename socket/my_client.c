@@ -11,16 +11,6 @@
 
 #include "lib.h"
 
-void __exit_failure(const char *s) 
-{
-  perror(s);
-  exit(EXIT_FAILURE);
-}
-
-void exit_failure() 
-{
-  __exit_failure(NULL);
-}
 
 void info_sockaddr(struct sockaddr *sa)
 {
