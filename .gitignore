@@ -12,3 +12,4 @@ cscope*
 .tmp_versions
 Module.symvers
 modules.order
+/extended-asm.s
