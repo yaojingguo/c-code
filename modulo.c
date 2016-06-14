@@ -27,17 +27,3 @@ int divide(int a, int b)
     quotient--;
   return quotient;
 }
-
-/*
-printf("%.10g\n", 0.00001);
-printf("%.10g\n", 0.0001);
-printf("%.10f\n", 0.0001);
-printf("%E\n", 0.000123);
-*/
-
-/*
-  printf("%d\n", 7 % 5);
-  printf("%d\n", -7 % 5);
-
-  printf("%d\n", -7 / -5);
-*/
