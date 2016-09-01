@@ -1,5 +1,3 @@
-// from https://en.wikipedia.org/wiki/Mmap
-
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <err.h>
@@ -20,9 +18,20 @@ int main(void)
 
   if ((fd = open("/dev/zero", O_RDWR, 0)) == -1)
     err(1, "open");
-
-  anon = (char*) map(NULL, 4096, PROT_READ|PROT_WRITE, MAP_ANON|MAP_SHARED, -1, 0);
-  zero = (char*) mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_FILE|MAP_SHARED, fd, 0);
+  /*
+    sample output:
+     PID 1326:	anonymous string 1, zero-backed string 1
+     PID 1327:	anonymous string 1, zero-backed string 1
+     PID 1326:	anonymous string 2, zero-backed string 2
+     PID 1327:	anonymous string 2, zero-backed string 2
+    sample output if MAP_SHARED is changed to MAP_PRIVATE.
+     PID 1326:	anonymous string 1, zero-backed string 1
+     PID 1327:	anonymous string 1, zero-backed string 1
+     PID 1326:	anonymous string 2, zero-backed string 2
+     PID 1327:	anonymous string 1, zero-backed string 2
+  */
+  anon = (char*)mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_ANON|MAP_SHARED, -1, 0);
+  zero = (char*)mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_FILE|MAP_SHARED, fd, 0);
 
   if (anon == MAP_FAILED || zero == MAP_FAILED)
     errx(1, "either mmap");
