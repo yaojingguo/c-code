@@ -8,6 +8,7 @@ struct fox {
 
 void test1() 
 {
+  printf("test1-----------------------------------\n");
   struct fox red_fox = {
     .weight      = 6,
     .list = LIST_HEAD_INIT(red_fox.list),
@@ -17,11 +18,16 @@ void test1()
 
 void test2()
 {
+  printf("test2-----------------------------------\n");
+
   static LIST_HEAD(fox_list);
+
   struct fox f1 = { .weight = 1 };
   list_add(&f1.list, &fox_list);
+
   struct fox f2 = { .weight = 2 };
   list_add_tail(&f2.list, &fox_list);
+
   struct fox f0 = { .weight = 0 };
   list_add(&f0.list, &fox_list);
 
