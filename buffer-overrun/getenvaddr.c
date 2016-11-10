@@ -4,6 +4,7 @@
  * but this is the one I use. 
  */
 
+// For this to work, ASLR needs to be disabled.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
