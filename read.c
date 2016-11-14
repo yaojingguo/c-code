@@ -1,8 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-int main(int argc, char *argv[])
-{
+void close_stdin() {
   char buf[10] = { 0 };
   int count;
 
@@ -12,6 +11,24 @@ int main(int argc, char *argv[])
 
   printf("count: %d\n", count);
   printf("buf: %s\n", buf);
-   
+}
+
+void close_stdout() {
+  int fd = 1;
+  /* close(fd); */
+  write(fd, "abc", 4); 
   return 0;
 }
+
+void close_stderr() {
+  int fd = 2;
+  /* close(fd); */
+  write(fd, "abc", 4); 
+  return 0;
+}
+
+int main(int argc, char *argv[])
+{
+  return 0;
+}
+
