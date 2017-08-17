@@ -32,27 +32,23 @@ int main(int argc, char *argv[])
     perror("inet_pton error occured\n");
     return 1;
   } 
-  printf("111\n");
 
   if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
     printf("Error : Connect Failed \n");
     return 1;
   } 
-  printf("222\n");
 
   if (write(sockfd, "abc\n", 4) != 4) {
     perror("write error");
     return 1;
   }
 
-  printf("333\n");
   int copy;
   if ((copy = dup(sockfd)) == -1) {
     printf("Error: dup error\n");
     return 1;
   }
 
-  printf("444\n");
   int i = 0;
   memset(buf, 0,sizeof(buf));
   while ((i = read(sockfd, buf, sizeof(buf)-1)) > 0) {
@@ -62,12 +58,10 @@ int main(int argc, char *argv[])
     }
   } 
 
-  printf("555\n");
   if (i < 0) {
     printf("Read error \n");
   } 
 
-  printf("666\n");
 
   printf("Sleeping...\n");
   sleep(10 * 60);
