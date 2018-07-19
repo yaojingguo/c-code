@@ -29,7 +29,7 @@ int main(int argc , char *argv[]) {
   printf("Connected\n");
 
   //keep communicating with server
-  const char* message = "hi\n";
+  const char* message = "hi";
   if( send(sock , message , strlen(message) , 0) < 0) {
     puts("Send failed");
     return 1;
