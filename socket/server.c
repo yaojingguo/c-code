@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  p("Write data");
+  printf("Write data\n");
 
   ticks = time(NULL);
   snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
