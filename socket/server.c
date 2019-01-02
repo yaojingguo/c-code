@@ -1,3 +1,4 @@
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -49,20 +50,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-
-    child_pid = fork();
-    if(-1 == child_pid) {
-        perror("cannot fork process");
-        return 2;
-    } else if (0 == child_pid) {
-        close(socket_vector[0]);
-        child_process(socket_vector[1]);
-    } else {
-        fprintf(stderr, "PID of child process: %d.\n", (int)(child_pid));
-        close(socket_vector[1]);
-        parent_process(socket_vector[0]);
-    }
-
+    // Parent process
     // for (;;) {
     printf("accept...\n");
     if ((connfd = accept(listenfd, (struct sockaddr*)NULL, NULL)) == -1) {
@@ -82,4 +70,5 @@ int main(int argc, char *argv[])
     close(connfd);
     //   sleep(1);
     // }
+    return 1;
 }
