@@ -9,6 +9,19 @@
 #include <string.h>
 #include <sys/types.h>
 #include <time.h> 
+#include <pthread.h>
+
+void* work(void* ptr) {
+    int* int_ptr = (int*) ptr;
+    int fd = *int_ptr;
+    printf("sleeping...\n");
+    sleep(10);
+    printf("fd: %d\n", fd);
+    close(fd);
+    printf("fd closed\n");
+
+    return NULL;
+}
 
 int main(int argc, char *argv[])
 {
@@ -50,8 +63,12 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    // Parent process
-    // for (;;) {
+    pthread_t th;
+    if (pthread_create(&th, NULL, work, &listenfd)) {
+        perror("pthread_create create error");
+        exit(1);
+    }
+
     printf("accept...\n");
     if ((connfd = accept(listenfd, (struct sockaddr*)NULL, NULL)) == -1) {
         perror("accept error:");
