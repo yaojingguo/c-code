@@ -19,12 +19,16 @@ int main(int argc, char *argv[])
   int reuse = 1;
 
   printf("socket...\n");
-  if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-    __exit_failure("socket error:");
+  if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    perror("socket error:");
+    exit(1);
+  }
 
   printf("setsockopt...\n");
-  if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) == -1) 
-    __exit_failure("setsockopt error: ");
+  if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) == -1) {
+    perror("setsockopt error: ");
+    exit(1);
+  }
 
   memset(&serv_addr, '0', sizeof(serv_addr));
   memset(sendBuff, '0', sizeof(sendBuff)); 
@@ -34,24 +38,32 @@ int main(int argc, char *argv[])
   serv_addr.sin_port = htons(5000); 
 
   printf("bind...\n");
-  if (bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
-    __exit_failure("bind error:");
+  if (bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) {
+    perror("bind error:");
+    exit(1);
+  }
 
   printf("listen...\n");
-  if(listen(listenfd, 10) == -1) 
-    __exit_failure("listen error:");
+  if(listen(listenfd, 10) == -1) {
+    perror("listen error:");
+    exit(1);
+  }
 
   // for (;;) {
   printf("accept...\n");
-  if ((connfd = accept(listenfd, (struct sockaddr*)NULL, NULL)) == -1) 
-    __exit_failure("accept error:");
+  if ((connfd = accept(listenfd, (struct sockaddr*)NULL, NULL)) == -1) {
+    perror("accept error:");
+    exit(1);
+  }
 
   p("Write data");
 
   ticks = time(NULL);
   snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
-  if (write(connfd, sendBuff, strlen(sendBuff)) == -1)
-    __exit_failure("write error:");
+  if (write(connfd, sendBuff, strlen(sendBuff)) == -1) {
+    perror("write error:");
+    exit(1);
+  }
 
   close(connfd);
   //   sleep(1);
