@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <time.h>
 #include <sys/resource.h>
@@ -8,7 +7,7 @@
 
 int main(int argc, char *argv[]) {
     struct timespec spec;
-    clock_gettime(CLOCK_REALTIME, &spec);
+    clock_getres(CLOCK_REALTIME, &spec);
     printf("sec: %ld\n", spec.tv_sec);
     printf("nsec: %ld\n", spec.tv_nsec);
     return 0;
