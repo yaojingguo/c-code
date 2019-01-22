@@ -1,0 +1,5 @@
+clock_getres
+clock_gettime
+clock_settime
+gettimeofday
+localtime
