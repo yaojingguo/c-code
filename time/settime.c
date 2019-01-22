@@ -2,6 +2,7 @@
 #include <time.h>
 #include <sys/resource.h>
 #include <sys/time.h>
+#include <assert.h>
 
 #define SEC 100000000L
 
