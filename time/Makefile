@@ -1,4 +1,4 @@
-PROG=clock_gettime clock_settime clock_getres localtime gettimeofday
+PROG=clock_gettime clock_settime clock_getres localtime gettimeofday strftime strptime
 all: $(PROG)
 
 .c.o:
