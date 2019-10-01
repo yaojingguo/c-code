@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -36,12 +37,13 @@ int main() {
     }
     printf("snd low watermark = %ld\n", len);
 
-    /*struct timeval tv;*/
-    /*if (getsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &len, &tv) < 0) {*/
-    /*    perror(": getsockopt");*/
-    /*}*/
-    /*printf("tv_sec: %d\n", tv.tv_sec);*/
-    /*printf("tv_usec: %d\n", tv.tv_usec);*/
+    struct timeval tv;
+    optlen = sizeof(tv);
+    if (getsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, &optlen) < 0) {
+        perror(": getsockopt");
+    }
+    printf("SO_RCVTIMEO tv_sec: %ld\n", tv.tv_sec);
+    printf("SO_RCVTIMEO tv_usec: %d\n", tv.tv_usec);
 
 
     t1 =1000000; t2 = sizeof(int);
@@ -71,6 +73,18 @@ int main() {
         perror(": getsockopt");
     }
     printf("maximum segment size: %d\n", max_size);
+
+    tv.tv_sec = 10;
+    optlen = sizeof(tv);
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, optlen) < 0) {
+        perror(": setsockopt");
+    }
+    struct timeval tv2;
+    if (getsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv2, &optlen) < 0) {
+        perror(": getsockopt");
+    }
+    printf("SO_RCVTIMEO tv_sec: %ld\n", tv.tv_sec);
+    printf("SO_RCVTIMEO tv_usec: %d\n", tv.tv_usec);
 }
 
 
