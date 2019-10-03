@@ -13,23 +13,25 @@
 #define MAXEVENTS 64
 // Run the server "./a.out 5000". Open several consoles and run "nc 127.0.0.1 
 // 50000". Type some characters and hit return. Observe the server behaviour.
-static int
-make_socket_non_blocking(int sfd)
-{
-	int flags, s;
+
+static void print_error_and_exit(const char* api_name) {
+    perror(api_name);
+    exit(EXIT_FAILURE);
+}
+
+static void make_socket_non_blocking(int sfd) {
+	int flags;
 
 	flags = fcntl(sfd, F_GETFL, 0);
 	if (flags == -1) {
-		perror("fcntl");
-		return -1;
+        print_error_and_exit("fcntl");
 	}
+
 	flags |= O_NONBLOCK;
-	s = fcntl(sfd, F_SETFL, flags);
-	if (s == -1) {
-		perror("fcntl");
-		return -1;
+	int ret = fcntl(sfd, F_SETFL, flags);
+	if (ret == -1) {
+        print_error_and_exit("fcntl");
 	}
-	return 0;
 }
 
 static int
@@ -81,15 +83,14 @@ main(int argc, const char *argv[])
 	struct epoll_event* events;
 
 	if (argc != 2) {
-		fprintf(stderr, "Usage: %s [port]\n", argv[0]);
+		fprintf(stderr, "usage: %s [port]\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
+
 	sfd = create_and_bind(argv[1]);
 	if (sfd == -1)
 		abort();
-	s = make_socket_non_blocking(sfd);
-	if (s == -1)
-		abort();
+	make_socket_non_blocking(sfd);
 	s = listen(sfd, SOMAXCONN);
 	if (s == -1) {
 		perror("listen");
@@ -156,9 +157,7 @@ main(int argc, const char *argv[])
 					}
 					// Make the incoming socket non-blocking and add it to the
 					// list of fds to monitor.
-					s = make_socket_non_blocking(infd);
-					if (s == -1)
-						abort();
+					make_socket_non_blocking(infd);
 					event.data.fd = infd;
 					event.events = EPOLLIN || EPOLLET;
 					s = epoll_ctl(efd, EPOLL_CTL_ADD, infd, &event);
