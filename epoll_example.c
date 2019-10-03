@@ -34,72 +34,73 @@ static void make_socket_non_blocking(int sfd) {
 	}
 }
 
-static int
-create_and_bind(const char *port)
-{
+static int create_and_bind(const char *port) {
 	struct addrinfo hints;
-	struct addrinfo *result, *rp;
-	int s, sfd;
-
+	struct addrinfo *res;
 	memset(&hints, 0, sizeof(struct addrinfo));
-	hints.ai_family = AF_UNSPEC;			// Return IPv4 and IPv6 choices
-	hints.ai_socktype = SOCK_STREAM;	// We want a TCP socket
-	hints.ai_flags = AI_PASSIVE;      // All interfaces
-
-	s = getaddrinfo(NULL, port, &hints, &result);
-	if (s != 0) {
-		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
-		return -1;
+  // Return IPv4 and IPv6 choices
+	hints.ai_family = AF_UNSPEC;			
+  // We want a TCP socket
+	hints.ai_socktype = SOCK_STREAM;	
+  // All interfaces
+	hints.ai_flags = AI_PASSIVE;      
+	int ret = getaddrinfo(NULL, port, &hints, &res);
+	if (ret != 0) {
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
+    exit(EXIT_FAILURE);
 	}
 
-	for (rp = result; rp != NULL; rp = rp->ai_next) {
+  // Loop over adding and try to bind
+	int sfd;
+	struct addrinfo *rp;
+	for (rp = res; rp != NULL; rp = rp->ai_next) {
 		sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-		if (sfd == -1)
+		if (sfd == -1) {
 			continue;
-		s = bind(sfd, rp->ai_addr, rp->ai_addrlen);
-		if (s == 0) {
-			// We managed to bind successfully!
+    }
+		ret = bind(sfd, rp->ai_addr, rp->ai_addrlen);
+		if (ret == 0) {
 			break;
 		}
 		close(sfd);
 	}
 
 	if (rp == NULL) {
-		fprintf(stderr, "Could not bind\n");
-		return -1;
+		fprintf(stderr, "could not bind\n");
+    exit(EXIT_FAILURE);
 	}
 
-	freeaddrinfo(result);
+	freeaddrinfo(res);
 	return sfd;
 }
 
+static int serve(const char* port) {
+	int sfd = create_and_bind(port);
+	make_socket_non_blocking(sfd);
+	int ret = listen(sfd, SOMAXCONN);
+	if (ret == -1) {
+    print_error_and_exit("listen");
+	}
+  return sfd;
+}
 
-int 
-main(int argc, const char *argv[]) 
-{
-	int sfd, s;
-	int efd;
-	struct epoll_event event;
-	struct epoll_event* events;
 
+int main(int argc, const char *argv[]) {
 	if (argc != 2) {
 		fprintf(stderr, "usage: %s [port]\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
+  int sfd = serve(argv[1]);
 
-	sfd = create_and_bind(argv[1]);
-	if (sfd == -1)
-		abort();
-	make_socket_non_blocking(sfd);
-	s = listen(sfd, SOMAXCONN);
-	if (s == -1) {
-		perror("listen");
-		abort();
-	}
+
+  int s;
+  int ret;
+	int efd;
+	struct epoll_event event;
+	struct epoll_event* events;
 	efd = epoll_create1(0);
 	if (efd == -1) {
-		perror("epoll_create");
-		abort();
+    print_error_and_exit("epoll_create1");
 	}
 	event.data.fd = sfd;
 	event.events = EPOLLIN | EPOLLET;
