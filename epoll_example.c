@@ -38,9 +38,9 @@ static void make_socket_non_blocking(int sfd) {
 static void add_to_epoll_for_read(int efd, int fd) {
     make_socket_non_blocking(fd);
     struct epoll_event event;
-    event.data.fd = sfd;
+    event.data.fd = fd;
     event.events = EPOLLIN | EPOLLET;
-    int ret = epoll_ctl(efd, EPOLL_CTL_ADD, sfd, &event);
+    int ret = epoll_ctl(efd, EPOLL_CTL_ADD, fd, &event);
     if (ret == -1) {
         print_error_and_exit("epoll_ctl");
     }
@@ -135,11 +135,13 @@ static void read_all(int fd) {
     }
 }
 
-static void accept_for_read(int sfd) {
+static void accept_for_read(int efd, int sfd) {
     struct sockaddr in_addr;
     socklen_t in_len = sizeof(in_addr);
     int infd;
     char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
+    int ret;
+
     for (;;) {
         infd = accept(sfd, &in_addr, &in_len);
         if (infd == -1) {
@@ -176,7 +178,7 @@ int main(int argc, const char *argv[]) {
     }
     add_to_epoll_for_read(efd, sfd);
 
-    struct epoll_event* events = calloc(MAXEVENTS, sizeof event);
+    struct epoll_event* events = calloc(MAXEVENTS, sizeof(struct epoll_event));
 
     int s;
     int nfds;
@@ -200,7 +202,7 @@ int main(int argc, const char *argv[]) {
             } else if (sfd == fd) {
                 // We have a notification on the listening socket, which
                 // means one or more incoming connections.
-                accept_for_read(sdf);
+                accept_for_read(efd, sfd);
                 continue;
             } else {
                 read_all(fd);
