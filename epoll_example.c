@@ -181,17 +181,15 @@ int main(int argc, const char *argv[]) {
 
     int nfds;
     int fd;
-    // The event loop
-    while (1) {
+
+    for (;;) {
         nfds = epoll_wait(efd, events, MAXEVENTS, -1);
         if (nfds == -1) {
             print_error_and_exit("epoll_wait");
         }
         for (int i = 0; i < nfds; i++) {
             fd = events[i].data.fd;
-            if ((events[i].events & EPOLLERR) ||
-                    (events[i].events & EPOLLHUP) ||
-                    (!(events[i].events & EPOLLIN))) {
+            if (events[i].events & EPOLLERR) {
                 // An error has occurred on this fd, or the socket is not
                 // ready for reading (why were we notified then?)
                 fprintf(stderr, "epoll error\n");
