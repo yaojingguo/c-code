@@ -12,6 +12,8 @@
 
 #define MAXEVENTS 64
 char buf[512];
+char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
+
 // Run the server "./a.out 5000". Open several consoles and run "nc 127.0.0.1 
 // 50000". Type some characters and hit return. Observe the server behaviour.
 
@@ -50,9 +52,9 @@ static int create_and_bind(const char *port) {
     struct addrinfo hints;
     struct addrinfo *res;
     memset(&hints, 0, sizeof(struct addrinfo));
-    // Return IPv4 and IPv6 choices
+    // IPv4 and IPv6
     hints.ai_family = AF_UNSPEC;			
-    // We want a TCP socket
+    // TCP socket
     hints.ai_socktype = SOCK_STREAM;	
     // All interfaces
     hints.ai_flags = AI_PASSIVE;      
@@ -96,12 +98,10 @@ static int serve(const char* port) {
     return sfd;
 }
 
+// We have data on the fd waiting to be read. Read and display it. We must read
+// whatever data is available completely, as we are running in edge-triggered
+// mode and won't get a notification again for the same data.
 static void read_all(int fd) {
-    // We have data on the fd waiting to be read. Read and
-    // display it. We must read whatever data is available
-    // completely, as we are running in edge-triggered mode
-    // and won't get a notification again for the same
-    // data.
     int done = 0;
     ssize_t count;
     int ret;
@@ -139,7 +139,6 @@ static void accept_for_read(int efd, int sfd) {
     struct sockaddr in_addr;
     socklen_t in_len = sizeof(in_addr);
     int infd;
-    char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
     int ret;
 
     for (;;) {
@@ -180,7 +179,6 @@ int main(int argc, const char *argv[]) {
 
     struct epoll_event* events = calloc(MAXEVENTS, sizeof(struct epoll_event));
 
-    int s;
     int nfds;
     int fd;
     // The event loop
