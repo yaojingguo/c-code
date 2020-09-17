@@ -46,3 +46,14 @@ _subtract
 _sum
 dyld_stub_binder
 ```
+
+```
+$ make libxxx.so
+cc -shared -o libxxx.so arith.o
+Undefined symbols for architecture x86_64:
+  "_add", referenced from:
+      _sum in arith.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [libxxx.so] Error 1
+```
