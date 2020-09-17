@@ -1,4 +1,4 @@
-all: arith_main bad_arith_main add_main
+mac_all: arith_main bad_arith_main add_main
 		
 clean:
 	@rm -fr *.o *.so *_main
