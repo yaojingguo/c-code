@@ -4,7 +4,7 @@
 - Check the references of shared libraries in add_main and arith_main.
 - Read the part of Scott 4e_Supplementary Sections about dynamic linking.
 
-
+# macOS
 Dependency diagram:
 ```
 add.c   -----> libadd.so   -----> add_main
@@ -57,3 +57,27 @@ ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 make: *** [libxxx.so] Error 1
 ```
+
+# Linux
+```
+$ export LD_LIBRARY_PATH=.
+$ ./xxx_arith_main
+sum result: 11
+subtraction result: 9
+```
+
+```
+$ readelf -a add_main
+...
+Dynamic section at offset 0xdb0 contains 28 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [libadd.so]
+...
+```
+
+# Conclusion
+Shared library A depends shared library B.
+
+Linux GCC does not required B present by default when building A.
+macOS clang require B present by default. If B is not specified, 
+`-undefined dynamic_lookup` option needs to be specifed.
