@@ -1,6 +1,6 @@
 mac_all: arith_main bad_arith_main add_main
 
-linux_all: add_main bad_arith_main xxx_arith_main
+linux_all: add_main xxx_arith_main
 		
 clean:
 	@rm -fr *.o *.so *_main
