@@ -1,4 +1,4 @@
-all: arith_main bad_arith_main
+all: arith_main bad_arith_main add_main
 		
 clean:
 	@rm -fr *.o *.so *_main
@@ -17,6 +17,9 @@ libarith.so: arith.o
 
 libxxx.so: arith.o
 	cc -shared -o libxxx.so arith.o
+
+add_main:  add_main.c libadd.so
+	cc -Wall -o $@ $< -ladd -L.
 
 arith_main:     libarith.so arith_main.c libadd.so 
 	cc -Wall -o $@ arith_main.c -larith -ladd -L.

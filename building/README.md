@@ -5,7 +5,7 @@
 - Read the part of Scott 4e_Supplementary Sections about dynamic linking.
 
 
-
+Dependency diagram:
 ```
 add.c   -----> libadd.so   -----> add_main
                                      ^ 
@@ -31,4 +31,18 @@ dyld: Symbol not found: _add
   Expected in: flat namespace
 
 [1]    24469 abort      ./bad_arith_main
+```
+
+Symbol checking:
+```bash
+// Care about add which is a direct reference
+$ nm -g -u libarith.so
+_add
+dyld_stub_binder
+// Does not care about add which is a indirect reference here
+$ nm -g -u arith_main
+_printf
+_subtract
+_sum
+dyld_stub_binder
 ```
