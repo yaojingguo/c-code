@@ -1,4 +1,6 @@
 mac_all: arith_main bad_arith_main add_main
+
+linux_all: add_main bad_arith_main xxx_arith_main
 		
 clean:
 	@rm -fr *.o *.so *_main
@@ -20,6 +22,9 @@ libxxx.so: arith.o
 
 add_main:  add_main.c libadd.so
 	cc -Wall -o $@ $< -ladd -L.
+
+xxx_arith_main:     libxxx.so arith_main.c libadd.so 
+	cc -Wall -o $@ arith_main.c -larith -ladd -L.
 
 arith_main:     libarith.so arith_main.c libadd.so 
 	cc -Wall -o $@ arith_main.c -larith -ladd -L.
