@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include "add.h"
 
+/*
+int one = 0xFF; 
+int two = 0xFFFFFFFF;
+*/
+
 int main(int argc, char *argv[]) {
   int result;
 

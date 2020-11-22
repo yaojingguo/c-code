@@ -24,7 +24,7 @@ add_main:  add_main.c libadd.so
 	cc -Wall -o $@ $< -ladd -L.
 
 xxx_arith_main:     libxxx.so arith_main.c libadd.so 
-	cc -Wall -o $@ arith_main.c -larith -ladd -L.
+	cc -Wall -o $@ arith_main.c -lxxx -ladd -L.
 
 arith_main:     libarith.so arith_main.c libadd.so 
 	cc -Wall -o $@ arith_main.c -larith -ladd -L.
