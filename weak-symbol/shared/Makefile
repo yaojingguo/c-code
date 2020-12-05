@@ -5,6 +5,8 @@ main:
 	cc -g -fpic -c -o power_slow.po power_slow.c
 	cc -shared -fpic -o libpowerslow.so power_slow.po
 	cc  main.o power_slow.po -L`pwd` -Wl,-R`pwd` -lpowerslow -o main
+	cc  main.o power_slow.po -o omain
+	cc  main.o -L`pwd` -Wl,-R`pwd` -lpowerslow -o lmain
 
 main2: main.o
 	cc -g -c -o main.o main.c

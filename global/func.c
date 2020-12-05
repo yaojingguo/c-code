@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <pthread.h>
 
-__attribute__((weak)) 
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
-                          void *(*start_routine) (void *), void *arg);
+                          void *(*start_routine) (void *), void *arg)
+{
+  return 0;
+}
 
 int main()
 {
