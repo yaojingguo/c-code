@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "power_slow.h"
 
-void __attribute__((weak)) user_hook(void);
+// void __attribute__((weak)) user_hook(void);
+void user_hook(void);
 #ifdef ENABLE_DEF
 void user_hook(void) {
   fprintf(stderr, "power_slow: user_hook()\n");
