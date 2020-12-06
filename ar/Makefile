@@ -4,11 +4,13 @@ CFLAGS = -Wall
 LDFLAGS = -L$(shell pwd) -Wl,-R.
 LDLIBS = -larith
 
-example: example.o  libarith.a
-	$(CC) $(CFLAGS) $(LDFLAGS) $< $(LDLIBS) -o $@
+all: example example2
 
 example: example.o  libarith.a
 	$(CC) $(CFLAGS) $(LDFLAGS) $< $(LDLIBS) -o $@
+
+example2: example.o  libarith.a
+	$(CC) $(CFLAGS) $^ -o $@
 
 libarith.a: $(OBJ)
 	$(AR) cr $@ $^
